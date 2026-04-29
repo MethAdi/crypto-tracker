@@ -20,6 +20,8 @@ export const CoinDetail = ({ isDarkMode, toggleTheme, currency = "usd" }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setIsLoading(true);
+    setChartData([]); // Clear old chart data to prevent currency mismatch
     loadCoinData();
     loadChartData();
   }, [id, currency]);

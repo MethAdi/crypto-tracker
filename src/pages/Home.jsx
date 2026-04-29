@@ -2,6 +2,7 @@ import { fetchCryptos } from "../api/coinGecko";
 import { useEffect } from "react";
 import { useState } from "react";
 import { CryptoCard } from "../components/CryptoCard";
+import { formatPrice } from "../utils/formatter";
 
 export const Home = ({ isDarkMode, toggleTheme, currency, setCurrency }) => {
   const [cryptoList, setCryptoList] = useState([]);
@@ -24,6 +25,8 @@ export const Home = ({ isDarkMode, toggleTheme, currency, setCurrency }) => {
   };
 
   useEffect(() => {
+    setCryptoList([]); // Clear old data to prevent currency symbol mismatch if fetch fails
+    setIsLoading(true);
     fetchCryptoData();
     const interval = setInterval(fetchCryptoData, 30000);
     return () => clearInterval(interval); // Cleanup on unmount
@@ -205,6 +208,9 @@ export const Home = ({ isDarkMode, toggleTheme, currency, setCurrency }) => {
                       >
                         {coin.name}
                       </span>
+                      <span style={{ color: "#9ca3af", marginLeft: "0.5rem", fontSize: "0.9rem" }}>
+                        {formatPrice(coin.current_price, currency)}
+                      </span>
                     </div>
                     <span style={{ color: "#2ed573", fontWeight: "700" }}>
                       +{coin.price_change_percentage_24h?.toFixed(2)}%
@@ -270,6 +276,9 @@ export const Home = ({ isDarkMode, toggleTheme, currency, setCurrency }) => {
                         }}
                       >
                         {coin.name}
+                      </span>
+                      <span style={{ color: "#9ca3af", marginLeft: "0.5rem", fontSize: "0.9rem" }}>
+                        {formatPrice(coin.current_price, currency)}
                       </span>
                     </div>
                     <span style={{ color: "#ff4757", fontWeight: "700" }}>
