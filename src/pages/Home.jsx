@@ -208,7 +208,13 @@ export const Home = ({ isDarkMode, toggleTheme, currency, setCurrency }) => {
                       >
                         {coin.name}
                       </span>
-                      <span style={{ color: "#9ca3af", marginLeft: "0.5rem", fontSize: "0.9rem" }}>
+                      <span
+                        style={{
+                          color: "#9ca3af",
+                          marginLeft: "0.5rem",
+                          fontSize: "0.9rem",
+                        }}
+                      >
                         {formatPrice(coin.current_price, currency)}
                       </span>
                     </div>
@@ -277,7 +283,13 @@ export const Home = ({ isDarkMode, toggleTheme, currency, setCurrency }) => {
                       >
                         {coin.name}
                       </span>
-                      <span style={{ color: "#9ca3af", marginLeft: "0.5rem", fontSize: "0.9rem" }}>
+                      <span
+                        style={{
+                          color: "#9ca3af",
+                          marginLeft: "0.5rem",
+                          fontSize: "0.9rem",
+                        }}
+                      >
                         {formatPrice(coin.current_price, currency)}
                       </span>
                     </div>

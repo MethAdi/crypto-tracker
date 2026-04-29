@@ -85,22 +85,22 @@ export const CoinDetail = ({ isDarkMode, toggleTheme, currency = "usd" }) => {
             <h1>🚀 Crypto Tracker</h1>
             <p>Track your favorite cryptocurrencies in real-time</p>
           </div>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <button 
-              className="theme-toggle" 
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <button
+              className="theme-toggle"
               onClick={toggleTheme}
               style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '8px',
-                padding: '0.75rem',
-                cursor: 'pointer',
-                color: isDarkMode ? '#fff' : '#000',
-                fontSize: '1.2rem',
-                transition: '0.3s'
+                background: "rgba(255, 255, 255, 0.1)",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                borderRadius: "8px",
+                padding: "0.75rem",
+                cursor: "pointer",
+                color: isDarkMode ? "#fff" : "#000",
+                fontSize: "1.2rem",
+                transition: "0.3s",
               }}
             >
-              {isDarkMode ? '☀️' : '🌙'}
+              {isDarkMode ? "☀️" : "🌙"}
             </button>
             <button onClick={() => navigate("/")} className="back-button">
               Go Back
@@ -123,7 +123,12 @@ export const CoinDetail = ({ isDarkMode, toggleTheme, currency = "usd" }) => {
         </div>
         <div className="coin-price-section">
           <div className="current-price">
-            <h2>{formatPrice(coin.market_data?.current_price?.[currency] || 0, currency)}</h2>
+            <h2>
+              {formatPrice(
+                coin.market_data?.current_price?.[currency] || 0,
+                currency,
+              )}
+            </h2>
             <span
               className={`change-badge ${isPositive ? "positive" : "negative"}`}
             >
@@ -134,13 +139,19 @@ export const CoinDetail = ({ isDarkMode, toggleTheme, currency = "usd" }) => {
             <div className="price-range">
               <span className="range-label">24h High</span>
               <span className="range-value">
-                {formatPrice(coin.market_data?.high_24h?.[currency] || 0, currency)}
+                {formatPrice(
+                  coin.market_data?.high_24h?.[currency] || 0,
+                  currency,
+                )}
               </span>
             </div>
             <div className="price-range">
               <span className="range-label">24h Low</span>
               <span className="range-value">
-                {formatPrice(coin.market_data?.low_24h?.[currency] || 0, currency)}
+                {formatPrice(
+                  coin.market_data?.low_24h?.[currency] || 0,
+                  currency,
+                )}
               </span>
             </div>
           </div>
@@ -186,13 +197,31 @@ export const CoinDetail = ({ isDarkMode, toggleTheme, currency = "usd" }) => {
           <div className="stat-card">
             <span className="stat-label">Market Cap</span>
             <span className="stat-value">
-              {new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumSignificantDigits: 1 }).format(0).replace(/\d/g, '').replace(/\./g, "").trim()}{formatMarketCap(coin.market_data.market_cap[currency] || 0)}
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency,
+                maximumSignificantDigits: 1,
+              })
+                .format(0)
+                .replace(/\d/g, "")
+                .replace(/\./g, "")
+                .trim()}
+              {formatMarketCap(coin.market_data.market_cap[currency] || 0)}
             </span>
           </div>
           <div className="stat-card">
             <span className="stat-label">Volume (24h)</span>
             <span className="stat-value">
-              {new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumSignificantDigits: 1 }).format(0).replace(/\d/g, '').replace(/\./g, "").trim()}{formatMarketCap(coin.market_data.total_volume[currency] || 0)}
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency,
+                maximumSignificantDigits: 1,
+              })
+                .format(0)
+                .replace(/\d/g, "")
+                .replace(/\./g, "")
+                .trim()}
+              {formatMarketCap(coin.market_data.total_volume[currency] || 0)}
             </span>
           </div>
           <div className="stat-card">

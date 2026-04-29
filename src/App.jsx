@@ -28,10 +28,29 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} currency={currency} setCurrency={setCurrency} />} />
-        <Route path="/coin/:id" element={<CoinDetail isDarkMode={isDarkMode} toggleTheme={toggleTheme} currency={currency} setCurrency={setCurrency} />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              isDarkMode={isDarkMode}
+              toggleTheme={toggleTheme}
+              currency={currency}
+              setCurrency={setCurrency}
+            />
+          }
+        />
+        <Route
+          path="/coin/:id"
+          element={
+            <CoinDetail
+              isDarkMode={isDarkMode}
+              toggleTheme={toggleTheme}
+              currency={currency}
+              setCurrency={setCurrency}
+            />
+          }
+        />
       </Routes>
-      
     </BrowserRouter>
   );
 }
