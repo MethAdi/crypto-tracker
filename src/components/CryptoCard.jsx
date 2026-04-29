@@ -1,7 +1,7 @@
 import { formatPrice, formatMarketCap } from "../utils/formatter";
 import { Link } from "react-router";
 
-export const CryptoCard = ({ crypto }) => {
+export const CryptoCard = ({ crypto, currency = "usd" }) => {
   return (
     <Link
       to={`/coin/${crypto.id}`}
@@ -19,7 +19,7 @@ export const CryptoCard = ({ crypto }) => {
           </div>
         </div>
         <div className="crypto-price">
-          <p className="price"> {formatPrice(crypto.current_price)}</p>
+          <p className="price"> {formatPrice(crypto.current_price, currency)}</p>
           <p
             className={`change ${crypto.price_change_percentage_24h >= 0 ? " positive" : "negative"}`}
           >
@@ -30,13 +30,13 @@ export const CryptoCard = ({ crypto }) => {
           <div className="stats">
             <span className="stat-label">Market Cap </span>
             <span className="stat-value">
-              ${formatMarketCap(crypto.market_cap || 0)}
+              {new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumSignificantDigits: 1 }).format(0).replace(/\d/g, '').replace(/\./g, "").trim()}{formatMarketCap(crypto.market_cap || 0)}
             </span>
           </div>
           <div className="stats">
             <span className="stat-label">Volume </span>
             <span className="stat-value">
-              ${formatMarketCap(crypto.total_volume || 0)}
+              {new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumSignificantDigits: 1 }).format(0).replace(/\d/g, '').replace(/\./g, "").trim()}{formatMarketCap(crypto.total_volume || 0)}
             </span>
           </div>
         </div>

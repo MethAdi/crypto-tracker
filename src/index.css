@@ -620,3 +620,18 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Light Mode Overrides */
+body.light-mode .app { background: #fdfdfd; }
+body.light-mode .header { background: rgba(255, 255, 255, 0.8); border-bottom: 1px solid rgba(0,0,0,0.1); }
+body.light-mode .logo-section h1 { -webkit-text-fill-color: #010203; }
+body.light-mode .logo-section p, body.light-mode .filter-group label, body.light-mode .crypto-info h3, body.light-mode .crypto-price .price, body.light-mode .coin-title h1, body.light-mode .stat-card .stat-value { color: #111827; }
+body.light-mode .search-input, body.light-mode .filter-group select, body.light-mode .view-toggle button { background: #ffffff; color: #111827; border-color: #d1d5db; }
+body.light-mode .search-input::placeholder { color: #6b7280; }
+body.light-mode .crypto-card, body.light-mode .stat-card, body.light-mode .chart-section, body.light-mode .coin-price-section { background: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+body.light-mode .crypto-card:hover { box-shadow: 0 10px 15px rgba(0,0,0,0.1); background: #f9fafb; }
+body.light-mode .footer { background: #f3f4f6; border-top: 1px solid #e5e7eb; }
+body.light-mode .footer p, body.light-mode .crypto-info .symbol, body.light-mode .stat-label { color: #4b5563; }
+body.light-mode .no-results { color: #111827; }
+body.light-mode .loading { color: #111827; }
+

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { CryptoCard } from "../components/CryptoCard";
 
-export const Home = () => {
+export const Home = ({ isDarkMode, toggleTheme, currency, setCurrency }) => {
   const [cryptoList, setCryptoList] = useState([]);
   const [filteredList, setFilteredList] = useState([]); // holds the filtered data
   const [isLoading, setIsLoading] = useState(true);
@@ -12,19 +12,9 @@ export const Home = () => {
 
   const [sortBy, setSortBy] = useState("market_cap_rank");
 
-  useEffect(() => {
-    //when page loads fetches the data and prints it in console
-    const interval = setInterval(fetchCryptoData, 300);
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
-
-  useEffect(() => {
-    filterandSort();
-  }, [cryptoList, sortBy, searchQuery]);
-
   const fetchCryptoData = async () => {
     try {
-      const data = await fetchCryptos();
+      const data = await fetchCryptos(currency);
       setCryptoList(data);
     } catch (error) {
       console.error("Error fetching cryptos:", error);
@@ -32,6 +22,16 @@ export const Home = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCryptoData();
+    const interval = setInterval(fetchCryptoData, 30000);
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [currency]);
+
+  useEffect(() => {
+    filterandSort();
+  }, [cryptoList, sortBy, searchQuery]);
 
   const filterandSort = () => {
     let filtered = Array.isArray(cryptoList)
@@ -62,6 +62,14 @@ export const Home = () => {
     setFilteredList(filtered);
   };
 
+  const trendingSorted = [...cryptoList].sort(
+    (a, b) =>
+      (b.price_change_percentage_24h || 0) -
+      (a.price_change_percentage_24h || 0),
+  );
+  const topGainers = trendingSorted.slice(0, 3);
+  const topLosers = trendingSorted.slice(-3).reverse();
+
   return (
     <div className="app">
       <header className="header">
@@ -70,7 +78,16 @@ export const Home = () => {
             <h1>🚀 Crypto Tracker</h1>
             <p>Track your favorite cryptocurrencies in real-time</p>
           </div>
-          <div className="search-section">
+          <div
+            className="search-section"
+            style={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+            }}
+          >
             <input
               type="text"
               placeholder="Search cryptocurrencies..."
@@ -78,9 +95,194 @@ export const Home = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               value={searchQuery}
             />
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              style={{
+                padding: "0.75rem",
+                borderRadius: "8px",
+                background: "rgba(255, 255, 255, 0.1)",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                color: "blue",
+                cursor: "pointer",
+              }}
+            >
+              <option value="usd">USD ($)</option>
+              <option value="eur">EUR (€)</option>
+              <option value="gbp">GBP (£)</option>
+              <option value="inr">INR (₹)</option>
+              <option value="jpy">JPY (¥)</option>
+            </select>
+            <button
+              className="theme-toggle"
+              onClick={toggleTheme}
+              style={{
+                background: "rgba(255, 255, 255, 0.1)",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                borderRadius: "8px",
+                padding: "0.75rem",
+                cursor: "pointer",
+                color: isDarkMode ? "#fff" : "#000",
+                fontSize: "1.2rem",
+                transition: "0.3s",
+              }}
+            >
+              {isDarkMode ? "🌙" : "☀️"}
+            </button>
           </div>
         </div>
       </header>
+
+      {!isLoading && topGainers.length > 0 && (
+        <div
+          style={{
+            maxWidth: "1400px",
+            margin: "2rem auto 0",
+            padding: "0 2rem",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: "2rem",
+            }}
+          >
+            <div
+              style={{
+                background: "rgba(46, 213, 115, 0.05)",
+                border: "1px solid rgba(46, 213, 115, 0.2)",
+                padding: "1.5rem",
+                borderRadius: "16px",
+              }}
+            >
+              <h2
+                style={{
+                  color: "#2ed573",
+                  marginBottom: "1rem",
+                  fontSize: "1.2rem",
+                }}
+              >
+                📈 Top Gainers
+              </h2>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.75rem",
+                }}
+              >
+                {topGainers.map((coin) => (
+                  <div
+                    key={coin.id}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <img
+                        src={coin.image}
+                        alt={coin.name}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontWeight: "600",
+                          color: isDarkMode ? "#fff" : "#000",
+                        }}
+                      >
+                        {coin.name}
+                      </span>
+                    </div>
+                    <span style={{ color: "#2ed573", fontWeight: "700" }}>
+                      +{coin.price_change_percentage_24h?.toFixed(2)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "rgba(255, 71, 87, 0.05)",
+                border: "1px solid rgba(255, 71, 87, 0.2)",
+                padding: "1.5rem",
+                borderRadius: "16px",
+              }}
+            >
+              <h2
+                style={{
+                  color: "#ff4757",
+                  marginBottom: "1rem",
+                  fontSize: "1.2rem",
+                }}
+              >
+                📉 Top Losers
+              </h2>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.75rem",
+                }}
+              >
+                {topLosers.map((coin) => (
+                  <div
+                    key={coin.id}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <img
+                        src={coin.image}
+                        alt={coin.name}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontWeight: "600",
+                          color: isDarkMode ? "#fff" : "#000",
+                        }}
+                      >
+                        {coin.name}
+                      </span>
+                    </div>
+                    <span style={{ color: "#ff4757", fontWeight: "700" }}>
+                      {coin.price_change_percentage_24h?.toFixed(2)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="controls">
         <div className="filter-group">
           <label>Sort By:</label>
@@ -121,7 +323,7 @@ export const Home = () => {
       ) : (
         <div className={`crypto-container ${viewMode}`}>
           {filteredList.map((crypto, key) => (
-            <CryptoCard crypto={crypto} key={key} />
+            <CryptoCard crypto={crypto} key={key} currency={currency} />
           ))}
         </div>
       )}

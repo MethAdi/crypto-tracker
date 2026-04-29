@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "recharts";
 
-export const CoinDetail = () => {
+export const CoinDetail = ({ isDarkMode, toggleTheme, currency = "usd" }) => {
   const { id } = useParams();
   const [coin, setCoin] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +22,7 @@ export const CoinDetail = () => {
   useEffect(() => {
     loadCoinData();
     loadChartData();
-  }, [id]);
+  }, [id, currency]);
 
   const loadCoinData = async () => {
     try {
@@ -36,7 +36,7 @@ export const CoinDetail = () => {
   };
   const loadChartData = async () => {
     try {
-      const data = await fetchChartData(id);
+      const data = await fetchChartData(id, currency);
       const formattedData = data.prices.map(([timestamp, price]) => ({
         time: new Date(timestamp).toLocaleDateString("en-US", {
           month: "short",
@@ -83,9 +83,27 @@ export const CoinDetail = () => {
             <h1>🚀 Crypto Tracker</h1>
             <p>Track your favorite cryptocurrencies in real-time</p>
           </div>
-          <button onClick={() => navigate("/")} className="back-button">
-            Go Back
-          </button>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <button 
+              className="theme-toggle" 
+              onClick={toggleTheme}
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '8px',
+                padding: '0.75rem',
+                cursor: 'pointer',
+                color: isDarkMode ? '#fff' : '#000',
+                fontSize: '1.2rem',
+                transition: '0.3s'
+              }}
+            >
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
+            <button onClick={() => navigate("/")} className="back-button">
+              Go Back
+            </button>
+          </div>
         </div>
       </header>
       <div className="coin-detail">
@@ -103,7 +121,7 @@ export const CoinDetail = () => {
         </div>
         <div className="coin-price-section">
           <div className="current-price">
-            <h2>{formatPrice(coin.market_data?.current_price?.usd || 0)}</h2>
+            <h2>{formatPrice(coin.market_data?.current_price?.[currency] || 0, currency)}</h2>
             <span
               className={`change-badge ${isPositive ? "positive" : "negative"}`}
             >
@@ -114,13 +132,13 @@ export const CoinDetail = () => {
             <div className="price-range">
               <span className="range-label">24h High</span>
               <span className="range-value">
-                {formatPrice(coin.market_data?.high_24h?.usd || 0)}
+                {formatPrice(coin.market_data?.high_24h?.[currency] || 0, currency)}
               </span>
             </div>
             <div className="price-range">
               <span className="range-label">24h Low</span>
               <span className="range-value">
-                {formatPrice(coin.market_data?.low_24h?.usd || 0)}
+                {formatPrice(coin.market_data?.low_24h?.[currency] || 0, currency)}
               </span>
             </div>
           </div>
@@ -166,13 +184,13 @@ export const CoinDetail = () => {
           <div className="stat-card">
             <span className="stat-label">Market Cap</span>
             <span className="stat-value">
-              ${formatMarketCap(coin.market_data.market_cap.usd || 0)}
+              {new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumSignificantDigits: 1 }).format(0).replace(/\d/g, '').replace(/\./g, "").trim()}{formatMarketCap(coin.market_data.market_cap[currency] || 0)}
             </span>
           </div>
           <div className="stat-card">
             <span className="stat-label">Volume (24h)</span>
             <span className="stat-value">
-              ${formatMarketCap(coin.market_data.total_volume.usd || 0)}
+              {new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumSignificantDigits: 1 }).format(0).replace(/\d/g, '').replace(/\./g, "").trim()}{formatMarketCap(coin.market_data.total_volume[currency] || 0)}
             </span>
           </div>
           <div className="stat-card">
